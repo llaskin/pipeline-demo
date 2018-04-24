@@ -68,7 +68,7 @@ module.exports = function(config) {
     sauceLabs: {
       testName: 'Pipeline Unit Test Demo',
       startConnect: false,
-      tunnelIdentifier: 'derek_test_tunnel'
+      tunnelIdentifier: process.env.SAUCE_CONNECT_TUNNEL
     },
     captureTimeout: 120000,
     customLaunchers: customLaunchers,
@@ -77,6 +77,6 @@ module.exports = function(config) {
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: Object.keys(customLaunchers),
     singleRun: true,
-  
+
   });
 };

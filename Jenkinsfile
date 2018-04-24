@@ -5,6 +5,10 @@ node('master'){
   // def version = props.version
   def branch = "${env.BRANCH_NAME}"
 
+  environment {
+    SAUCE_CONNECT_TUNNEL = 'myTunnel'
+  }
+
   echo branch
   // echo version
 
@@ -14,6 +18,16 @@ node('master'){
 
   stage('Build') {
     sh 'npm install'
+  }
+
+  stage('Unit Tests') {
+    sauce('derek_sauce_key') {
+      withCredentials([usernamePassword(credentialsId: 'derek_sauce_key', passwordVariable: 'SAUCE_ACCESS_KEY', usernameVariable: 'SAUCE_USERNAME')]) {
+        sauceconnect(options: '-u $SAUCE_USERNAME -k $SAUCE_ACCESS_KEY -i $SAUCE_CONNECT_TUNNEL', sauceConnectPath: '') {
+          sh 'npm run test-single-run'
+        }
+      }
+    }
   }
 
   if(env.BRANCH_NAME == 'develop') {
